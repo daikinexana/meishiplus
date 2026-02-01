@@ -2254,7 +2254,7 @@ function LayoutL10({ profile, generatedJson, slug }: { profile: ProfileData; gen
 // ============================================
 
 function ShareSection({ slug, bgClass, textClass, bgStyle, titleColor }: { slug: string; bgClass: string; textClass: string; bgStyle?: React.CSSProperties; titleColor?: string }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://meishiplus.vercel.app";
   const profileUrl = `${baseUrl}/${slug}`;
   
   return (

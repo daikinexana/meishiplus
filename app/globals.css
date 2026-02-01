@@ -38,6 +38,11 @@ body {
 /* スムーズなスクロール */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* カスタムアニメーション */

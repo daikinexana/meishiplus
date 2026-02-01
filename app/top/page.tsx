@@ -288,11 +288,11 @@ export default async function TopPage() {
                   <input
                     type="text"
                     readOnly
-                    value={`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/${profile.slug}`}
+                    value={`${process.env.NEXT_PUBLIC_APP_URL || "https://meishiplus.vercel.app"}/${profile.slug}`}
                     className="flex-1 rounded-xl border border-gray-200/60 bg-white/80 px-4 py-3.5 text-sm font-mono text-gray-800 ring-1 ring-gray-200/50 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-300/50 sm:py-4 sm:text-base"
                   />
                   <CopyUrlButton
-                    url={`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/${profile.slug}`}
+                    url={`${process.env.NEXT_PUBLIC_APP_URL || "https://meishiplus.vercel.app"}/${profile.slug}`}
                   />
                 </div>
               </div>

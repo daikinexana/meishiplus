@@ -119,8 +119,8 @@ export default function EditorPage() {
     reasonText: "",
     valueText: "",
     notFitText: "",
-    experienceTags: [],
-    commonQuestions: [],
+    experienceTags: [""], // 初期状態で1つのフィールドを表示
+    commonQuestions: [""], // 初期状態で1つのフィールドを表示
     humanText: "",
     links: [],
     layoutTemplateId: "L01", // デフォルトはL01
@@ -156,8 +156,13 @@ export default function EditorPage() {
             reasonText: result.profile.reasonText || "",
             valueText: result.profile.valueText || "",
             notFitText: result.profile.notFitText || "",
-            experienceTags: result.profile.experienceTags || [],
-            commonQuestions: result.profile.commonQuestions || [],
+            // 既存データがある場合はそれを使用、ない場合は初期値として空文字列1つを設定
+            experienceTags: result.profile.experienceTags && result.profile.experienceTags.length > 0 
+              ? result.profile.experienceTags 
+              : [""],
+            commonQuestions: result.profile.commonQuestions && result.profile.commonQuestions.length > 0
+              ? result.profile.commonQuestions
+              : [""],
             humanText: result.profile.humanText || "",
             links: result.profile.links || [],
             layoutTemplateId: result.profile.layoutTemplateId || "L01",
@@ -1109,13 +1114,13 @@ export default function EditorPage() {
 
           {/* 経験・実績タグ（最大3） */}
           <div className="card-hover animate-fade-in-up rounded-2xl bg-white p-6 shadow-md sm:p-8">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                <h2 className="text-lg font-bold text-gray-900 sm:text-xl md:text-2xl">
                   経験・実績タグ（最大3）
                 </h2>
                 <HelpTooltip content="あなたの経験や実績を簡潔に表現してください。例えば「10年のコンサル経験」「100社以上の支援実績」「IPO支援経験あり」など。具体的な数字や実績があると、信頼性が高まります。">
-                  <svg className="h-5 w-5 text-gray-400 hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 text-gray-400 hover:text-purple-600 transition-colors sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </HelpTooltip>
@@ -1123,9 +1128,9 @@ export default function EditorPage() {
               {data.experienceTags && data.experienceTags.length < 3 && (
                 <button
                   onClick={addExperienceTag}
-                  className="group flex items-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-5 sm:py-2.5"
+                  className="group flex shrink-0 items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-4 sm:py-2 sm:text-sm md:px-5 md:py-2.5"
                 >
-                  <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-3.5 w-3.5 transition-transform group-hover:scale-110 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   <span>追加</span>
@@ -1140,7 +1145,7 @@ export default function EditorPage() {
                   "例：IPO支援経験あり"
                 ];
                 return (
-                  <div key={index} className="flex gap-3">
+                  <div key={index} className="flex gap-2 sm:gap-3">
                     <input
                       type="text"
                       value={tag}
@@ -1148,11 +1153,11 @@ export default function EditorPage() {
                         updateExperienceTag(index, e.target.value)
                       }
                       placeholder={placeholders[index] || "例：経験・実績"}
-                      className="flex-1 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-5 sm:py-3.5 sm:text-base"
+                      className="flex-1 min-w-0 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-2.5 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-4 sm:py-3 sm:text-base md:px-5 md:py-3.5"
                     />
                     <button
                       onClick={() => removeExperienceTag(index)}
-                      className="group flex items-center gap-2 rounded-xl border-2 border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-5 sm:py-3.5"
+                      className="group flex shrink-0 items-center justify-center gap-1 rounded-xl border-2 border-red-200 bg-white px-3 py-2.5 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-4 sm:py-3 md:px-5 md:py-3.5"
                     >
                       <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1167,13 +1172,13 @@ export default function EditorPage() {
 
           {/* よくある質問（最大3） */}
           <div className="card-hover animate-fade-in-up rounded-2xl bg-white p-6 shadow-md sm:p-8">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                <h2 className="text-lg font-bold text-gray-900 sm:text-xl md:text-2xl">
                   よくある質問（最大3）
                 </h2>
                 <HelpTooltip content="お客様からよく聞かれる質問を記入してください。例えば「どのくらいの期間で結果が出ますか？」「費用はどのくらいかかりますか？」など。事前に回答を用意しておくことで、見る人の不安を解消し、信頼関係を築きやすくなります。">
-                  <svg className="h-5 w-5 text-gray-400 hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 text-gray-400 hover:text-purple-600 transition-colors sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </HelpTooltip>
@@ -1181,9 +1186,9 @@ export default function EditorPage() {
               {data.commonQuestions && data.commonQuestions.length < 3 && (
                 <button
                   onClick={addCommonQuestion}
-                  className="group flex items-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-5 sm:py-2.5"
+                  className="group flex shrink-0 items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-4 sm:py-2 sm:text-sm md:px-5 md:py-2.5"
                 >
-                  <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-3.5 w-3.5 transition-transform group-hover:scale-110 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   <span>追加</span>
@@ -1198,7 +1203,7 @@ export default function EditorPage() {
                   "例：どのようなサポート体制ですか？"
                 ];
                 return (
-                  <div key={index} className="flex gap-3">
+                  <div key={index} className="flex gap-2 sm:gap-3">
                     <input
                       type="text"
                       value={question}
@@ -1206,11 +1211,11 @@ export default function EditorPage() {
                         updateCommonQuestion(index, e.target.value)
                       }
                       placeholder={placeholders[index] || "例：よくある質問"}
-                      className="flex-1 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-5 sm:py-3.5 sm:text-base"
+                      className="flex-1 min-w-0 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-2.5 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-4 sm:py-3 sm:text-base md:px-5 md:py-3.5"
                     />
                     <button
                       onClick={() => removeCommonQuestion(index)}
-                      className="group flex items-center gap-2 rounded-xl border-2 border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-5 sm:py-3.5"
+                      className="group flex shrink-0 items-center justify-center gap-1 rounded-xl border-2 border-red-200 bg-white px-3 py-2.5 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-4 sm:py-3 md:px-5 md:py-3.5"
                     >
                       <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1249,13 +1254,13 @@ export default function EditorPage() {
 
           {/* リンク集（最大5） */}
           <div className="card-hover animate-fade-in-up rounded-2xl bg-white p-6 shadow-md sm:p-8">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                <h2 className="text-lg font-bold text-gray-900 sm:text-xl md:text-2xl">
                   リンク集（最大5）
                 </h2>
                 <HelpTooltip content="あなたのポートフォリオ、ブログ、SNS、会社のホームページなどのリンクを追加できます。見る人がより詳しく知りたい場合に便利です。ラベルは「ポートフォリオ」「ブログ」「Twitter」など、わかりやすい名前をつけてください。">
-                  <svg className="h-5 w-5 text-gray-400 hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 text-gray-400 hover:text-purple-600 transition-colors sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </HelpTooltip>
@@ -1263,9 +1268,9 @@ export default function EditorPage() {
               {data.links && data.links.length < 5 && (
                 <button
                   onClick={addLink}
-                  className="group flex items-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-5 sm:py-2.5"
+                  className="group flex shrink-0 items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-white hover:shadow-md sm:px-4 sm:py-2 sm:text-sm md:px-5 md:py-2.5"
                 >
-                  <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-3.5 w-3.5 transition-transform group-hover:scale-110 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   <span>追加</span>
@@ -1289,7 +1294,7 @@ export default function EditorPage() {
                   "例：https://linkedin.com/in/username"
                 ];
                 return (
-                  <div key={index} className="flex flex-col gap-3 sm:flex-row">
+                  <div key={index} className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                     <input
                       type="text"
                       value={link.label}
@@ -1297,18 +1302,18 @@ export default function EditorPage() {
                         updateLink(index, "label", e.target.value)
                       }
                       placeholder={labelPlaceholders[index] || "ラベル"}
-                      className="rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:w-32 sm:px-5 sm:py-3.5 sm:text-base"
+                      className="rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-2.5 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:w-32 sm:px-4 sm:py-3 sm:text-base md:px-5 md:py-3.5"
                     />
                     <input
                       type="url"
                       value={link.url}
                       onChange={(e) => updateLink(index, "url", e.target.value)}
                       placeholder={urlPlaceholders[index] || "URL"}
-                      className="flex-1 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-5 sm:py-3.5 sm:text-base"
+                      className="flex-1 min-w-0 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-3 py-2.5 text-sm text-gray-900 shadow-sm transition-all duration-300 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:px-4 sm:py-3 sm:text-base md:px-5 md:py-3.5"
                     />
                     <button
                       onClick={() => removeLink(index)}
-                      className="group flex items-center justify-center gap-2 rounded-xl border-2 border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-5 sm:py-3.5"
+                      className="group flex shrink-0 items-center justify-center gap-1 rounded-xl border-2 border-red-200 bg-white px-3 py-2.5 text-sm font-semibold text-red-600 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:shadow-sm sm:px-4 sm:py-3 md:px-5 md:py-3.5"
                     >
                       <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

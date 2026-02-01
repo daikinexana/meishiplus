@@ -53,7 +53,7 @@
 
 ### 1.4 CORS設定（重要）
 1. 「アクセス許可」タブの「Cross-origin resource sharing (CORS)」セクションで「編集」をクリック
-2. 以下の設定を追加（`yourdomain.vercel.app`を実際のVercelドメインに置き換え）：
+2. 以下の設定を追加（`https://meishiplus.vercel.app`を実際のVercelドメインに置き換え）：
 
 ```json
 [
@@ -63,8 +63,10 @@
     "AllowedOrigins": [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://*.vercel.app",
-      "https://yourdomain.com"
+      "http://localhost:3002",
+      "http://localhost:3003",
+      "https://meishiplus.vercel.app",
+      "https://*.vercel.app"
     ],
     "ExposeHeaders": ["ETag"],
     "MaxAgeSeconds": 3000
@@ -72,9 +74,14 @@
 ]
 ```
 
-3. `yourdomain.com`を実際のカスタムドメインに置き換え（使用する場合）
-4. `*.vercel.app`はVercelのすべてのプレビュードメインを許可します
-5. 「変更を保存」をクリック
+**重要**: S3のCORS設定では、ワイルドカードパターン（`*.vercel.app`）が正しく機能しない場合があります。そのため、本番ドメイン（`https://meishiplus.vercel.app`）を明示的に追加してください。
+
+3. 使用しているすべてのローカルポート（3000, 3001, 3002, 3003など）を追加
+4. 本番ドメイン（`https://meishiplus.vercel.app`）を明示的に追加
+5. カスタムドメインを使用する場合は、それも追加
+6. 「変更を保存」をクリック
+
+**注意**: CORS設定を変更した後、反映までに数秒かかる場合があります。変更後もエラーが続く場合は、ブラウザのキャッシュをクリアしてください。
 
 ---
 
