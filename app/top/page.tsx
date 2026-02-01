@@ -7,6 +7,9 @@ import { SignOutButton } from "./components/SignOutButton";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+// 認証が必要なページのため、常に動的レンダリングを行う
+export const dynamic = 'force-dynamic';
+
 export default async function TopPage() {
   // ユーザーIDを取得
   const userId = await getAuthenticatedUserId();
