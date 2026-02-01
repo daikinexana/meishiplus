@@ -18,7 +18,7 @@ export function CopyUrlButton({ url }: { url: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
+      className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-gray-900/30 transition-all duration-300 hover:scale-105 hover:from-gray-800 hover:to-gray-700 hover:shadow-xl hover:shadow-gray-900/40 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 active:scale-95 sm:px-6 sm:py-3 sm:text-base"
     >
       {copied ? (
         <>

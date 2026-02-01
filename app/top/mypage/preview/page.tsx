@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getThemeStyles } from "@/lib/theme-styles";
+import { LayoutTemplates } from "@/app/[slug]/components/LayoutTemplates";
 
 interface GeneratedContent {
   tone: string;
   themeId: string;
   themeReason: string;
+  headline?: string;
+  tagline?: string;
   sections: {
     quick: { body: string };
     reason: { heading: string; summary: string; body: string };
@@ -29,10 +31,26 @@ export default function PreviewPage() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const generationSteps = [
-    "プロフィール情報を分析中...",
-    "テーマを決定中...",
-    "文章を生成中...",
-    "最終調整中...",
+    {
+      title: "プロフィール情報を分析中",
+      description: "入力内容を読み込んでいます",
+      icon: "📊"
+    },
+    {
+      title: "最適なテーマを選定中",
+      description: "あなたにぴったりのデザインを選んでいます",
+      icon: "🎨"
+    },
+    {
+      title: "魅力的な文章を生成中",
+      description: "AIが紹介記事を作成しています",
+      icon: "✨"
+    },
+    {
+      title: "最終調整中",
+      description: "仕上げの調整を行っています",
+      icon: "🎯"
+    },
   ];
 
   useEffect(() => {
@@ -196,39 +214,33 @@ export default function PreviewPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-600">読み込み中...</p>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900"></div>
+          <p className="text-base font-medium text-gray-600 sm:text-lg">読み込み中...</p>
+        </div>
       </div>
     );
   }
 
-  // テーマを取得（生成済みの場合はthemeIdを使用、未生成の場合はデフォルト）
-  // profile.themeIdを優先（データベースから取得した最新の値）
-  const themeId = profile?.themeId || generated?.themeId || null;
-  const theme = getThemeStyles(themeId);
-  
-  // デバッグ用ログ
-  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-    console.log("[preview] Theme debug:", {
-      profileThemeId: profile?.themeId,
-      generatedThemeId: generated?.themeId,
-      finalThemeId: themeId,
-      themeBackground: theme.background,
-      themeTextPrimary: theme.textPrimary,
-    });
-  }
-
   return (
-    <div className={`min-h-screen ${theme.background}`}>
-      <div className="mx-auto max-w-4xl px-6 py-12">
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16">
+        {/* ヘッダー */}
+        <div className="mb-10">
+          <div className="mb-4 inline-block">
+            <h1 className="text-5xl font-light tracking-tight text-gray-900 sm:text-6xl md:text-7xl">
+              Preview
+            </h1>
+            <div className="mt-2 h-0.5 w-full bg-gradient-to-r from-gray-900 via-gray-700 to-transparent"></div>
+          </div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <button
               onClick={() => router.push("/top")}
-              className="flex items-center gap-2 rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:shadow-sm"
+              className="group flex w-fit items-center gap-2 rounded-xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:border-gray-300 hover:bg-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 sm:px-5 sm:py-3"
             >
               <svg
-                className="h-4 w-4"
+                className="h-4 w-4 transition-transform group-hover:-translate-x-1 sm:h-5 sm:w-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -240,53 +252,62 @@ export default function PreviewPage() {
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              topに戻る
+              <span className="hidden sm:inline">topに戻る</span>
+              <span className="sm:hidden">戻る</span>
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">プレビュー</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            {/* 成功メッセージ */}
-            {showSuccess && (
-              <div className="flex items-center gap-2 rounded-full bg-green-50 px-4 py-2 text-sm font-medium text-green-700 animate-in fade-in slide-in-from-right duration-300">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              {/* 成功メッセージ */}
+              {showSuccess && (
+                <div className="flex items-center gap-2 rounded-xl border-2 border-green-200/60 bg-white/90 backdrop-blur-sm px-4 py-2.5 text-sm font-semibold text-green-700 shadow-md animate-fade-in sm:px-5 sm:py-3">
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>生成が完了しました</span>
+                </div>
+              )}
+              {generated && !generating && (
+                <button
+                  onClick={handlePublish}
+                  disabled={publishing}
+                  className={`group flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 sm:px-8 sm:py-3 sm:text-base ${
+                    profile.isPublished
+                      ? "bg-gradient-to-r from-gray-600 to-gray-700"
+                      : "bg-gradient-to-r from-gray-900 to-gray-800"
+                  }`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                生成が完了しました
-              </div>
-            )}
-            <div className="flex gap-4">
-            {generated && !generating && (
-              <button
-                onClick={handlePublish}
-                disabled={publishing}
-                className={`flex items-center gap-2 rounded px-6 py-2 font-medium text-white transition-all ${
-                  profile.isPublished
-                    ? "bg-gray-600 hover:bg-gray-700"
-                    : "bg-black hover:bg-gray-800"
-                } disabled:bg-gray-300 hover:shadow-sm`}
-              >
-                {publishing ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                    <span>処理中...</span>
-                  </>
-                ) : profile.isPublished ? (
-                  "非公開にする"
-                ) : (
-                  "公開する"
-                )}
-              </button>
-            )}
+                  {publishing ? (
+                    <>
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                      <span>処理中...</span>
+                    </>
+                  ) : profile.isPublished ? (
+                    <>
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                      <span>非公開にする</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <span>公開する</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -295,45 +316,86 @@ export default function PreviewPage() {
           <div className="space-y-8">
             {/* 生成中のローディングUI */}
             {generating && (
-              <div className="rounded-lg bg-white p-12 text-center shadow-sm animate-in fade-in duration-300">
-                <div className="mb-6">
-                  {/* スピナー */}
-                  <div className="mx-auto mb-6 h-20 w-20">
-                    <div className="relative h-full w-full">
-                      <div className="absolute inset-0 h-full w-full animate-spin rounded-full border-4 border-gray-100"></div>
-                      <div className="absolute inset-0 h-full w-full animate-spin rounded-full border-4 border-transparent border-t-black border-r-black" style={{ animationDuration: '1s' }}></div>
+              <div className="rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-8 text-center shadow-lg shadow-gray-200/20 transition-all hover:shadow-xl hover:shadow-gray-300/30 sm:p-12 md:p-16">
+                {/* メインアイコン */}
+                <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-gray-900 to-gray-800 shadow-xl sm:h-28 sm:w-28">
+                  <div className="relative h-full w-full">
+                    <div className="absolute inset-0 h-full w-full animate-spin rounded-full border-4 border-white/30"></div>
+                    <div className="absolute inset-0 h-full w-full animate-spin rounded-full border-4 border-transparent border-t-white border-r-white" style={{ animationDuration: '1.5s' }}></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="h-10 w-10 text-white sm:h-12 sm:w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
                     </div>
                   </div>
-                  {/* 進捗メッセージ */}
-                  <p className="text-xl font-semibold text-gray-900 mb-2">
-                    {generationSteps[generationStep]}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    通常30秒〜1分程度かかります
+                </div>
+
+                {/* 現在のステップ */}
+                <div className="mb-6">
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-700">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-600"></span>
+                    </span>
+                    <span>ステップ {generationStep + 1} / {generationSteps.length}</span>
+                  </div>
+                  <h2 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
+                    {generationSteps[generationStep].icon} {generationSteps[generationStep].title}
+                  </h2>
+                  <p className="text-base text-gray-600 sm:text-lg">
+                    {generationSteps[generationStep].description}
                   </p>
                 </div>
+
                 {/* プログレスバー */}
-                <div className="mx-auto h-2.5 w-full max-w-md overflow-hidden rounded-full bg-gray-100">
+                <div className="mx-auto mb-6 h-3 w-full max-w-md overflow-hidden rounded-full bg-gray-100 shadow-inner">
                   <div
-                    className="h-full bg-gradient-to-r from-black to-gray-800 transition-all duration-1000 ease-out shadow-sm"
+                    className="h-full bg-gradient-to-r from-gray-900 to-gray-800 transition-all duration-1000 ease-out shadow-sm"
                     style={{
                       width: `${((generationStep + 1) / generationSteps.length) * 100}%`,
                     }}
                   ></div>
                 </div>
+
                 {/* ステップインジケーター */}
-                <div className="mt-6 flex justify-center gap-2">
-                  {generationSteps.map((_, index) => (
+                <div className="flex justify-center gap-3">
+                  {generationSteps.map((step, index) => (
                     <div
                       key={index}
-                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                        index <= generationStep
-                          ? "bg-black scale-125"
-                          : "bg-gray-300"
+                      className={`flex flex-col items-center gap-2 transition-all duration-300 ${
+                        index <= generationStep ? "opacity-100" : "opacity-40"
                       }`}
-                    ></div>
+                    >
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-full text-lg transition-all duration-300 sm:h-12 sm:w-12 ${
+                          index < generationStep
+                            ? "bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-lg scale-110"
+                            : index === generationStep
+                            ? "bg-gradient-to-br from-gray-700 to-gray-600 text-white shadow-md scale-110 animate-pulse"
+                            : "bg-gray-200 text-gray-400"
+                        }`}
+                      >
+                        {index < generationStep ? (
+                          <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <span className="text-sm sm:text-base">{step.icon}</span>
+                        )}
+                      </div>
+                      <p className={`hidden text-xs font-medium sm:block ${
+                        index === generationStep ? "text-gray-900" : "text-gray-500"
+                      }`}>
+                        {step.title}
+                      </p>
+                    </div>
                   ))}
                 </div>
+
+                {/* 補足メッセージ */}
+                <p className="mt-8 text-sm text-gray-500">
+                  通常30秒〜1分程度かかります。しばらくお待ちください。
+                </p>
               </div>
             )}
 
@@ -341,13 +403,13 @@ export default function PreviewPage() {
             {generating && (
               <div className="space-y-8 animate-pulse">
                 {/* Hero スケルトン */}
-                <div className="rounded-lg bg-white p-8 shadow-sm">
+                <div className="rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-8 shadow-sm">
                   <div className="h-8 w-64 mb-4 bg-gray-200 rounded"></div>
                   <div className="h-6 w-96 bg-gray-200 rounded"></div>
                 </div>
 
                 {/* Quick Profile スケルトン */}
-                <div className="rounded-lg bg-white p-6 shadow-sm">
+                <div className="rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
                   <div className="space-y-3">
                     <div className="h-4 w-full bg-gray-200 rounded"></div>
                     <div className="h-4 w-full bg-gray-200 rounded"></div>
@@ -356,7 +418,7 @@ export default function PreviewPage() {
                 </div>
 
                 {/* Reason スケルトン */}
-                <div className="rounded-lg bg-white p-6 shadow-sm">
+                <div className="rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
                   <div className="h-7 w-48 mb-4 bg-gray-200 rounded"></div>
                   <div className="h-4 w-32 mb-4 bg-gray-200 rounded"></div>
                   <div className="space-y-3">
@@ -367,7 +429,7 @@ export default function PreviewPage() {
                 </div>
 
                 {/* Values スケルトン */}
-                <div className="rounded-lg bg-white p-6 shadow-sm">
+                <div className="rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
                   <div className="h-7 w-48 mb-4 bg-gray-200 rounded"></div>
                   <div className="h-4 w-32 mb-4 bg-gray-200 rounded"></div>
                   <div className="space-y-3">
@@ -378,7 +440,7 @@ export default function PreviewPage() {
                 </div>
 
                 {/* Not Fit スケルトン */}
-                <div className="rounded-lg bg-white p-6 shadow-sm border-2 border-gray-200">
+                <div className="rounded-2xl border-2 border-gray-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
                   <div className="h-7 w-56 mb-4 bg-gray-200 rounded"></div>
                   <div className="h-4 w-32 mb-4 bg-gray-200 rounded"></div>
                   <div className="space-y-3">
@@ -392,154 +454,56 @@ export default function PreviewPage() {
 
             {/* 未生成時のメッセージ */}
             {!generating && (
-              <div className="rounded-lg bg-white p-12 text-center shadow-sm">
-                <p className="mb-4 text-gray-600">
-                  まだ生成されていません。生成ボタンをクリックしてください。
+              <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-8 text-center shadow-lg shadow-gray-200/20 transition-all hover:shadow-xl hover:shadow-gray-300/30 sm:p-12 md:p-16">
+                <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-lg sm:h-20 sm:w-20">
+                  <svg className="h-8 w-8 sm:h-10 sm:w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h2 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+                  プロフィールを生成しましょう
+                </h2>
+                <p className="mx-auto mb-8 max-w-md text-base text-gray-600 sm:text-lg">
+                  入力内容をもとに、<br className="sm:hidden" />
+                  AIが魅力的なプロフィールページを生成します
                 </p>
                 <button
                   onClick={handleGenerate}
                   disabled={generating}
-                  className="rounded bg-black px-6 py-2 font-medium text-white transition-colors hover:bg-gray-800 disabled:bg-gray-300"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-gray-900/30 transition-all hover:scale-105 hover:from-gray-800 hover:to-gray-700 hover:shadow-xl hover:shadow-gray-900/40 disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 active:scale-95 sm:px-10 sm:py-4 sm:text-lg"
                 >
-                  生成する
+                  <svg
+                    className="h-5 w-5 transition-transform group-hover:rotate-12"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  <span>生成する</span>
                 </button>
               </div>
             )}
           </div>
         ) : (
-          (() => {
-            // 生成済みコンテンツ表示時も、最新のprofile.themeIdを使用
-            const displayThemeId = profile?.themeId || generated?.themeId || null;
-            const theme = getThemeStyles(displayThemeId);
-            
-            if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-              console.log("[preview] Display theme:", {
-                profileThemeId: profile?.themeId,
-                generatedThemeId: generated?.themeId,
-                displayThemeId,
-                themeBackground: theme.background,
-              });
-            }
-            
-            return (
-              <div className={`space-y-8 animate-in fade-in duration-500 ${theme.background}`}>
-                {/* Hero */}
-                <div className={`rounded-lg ${theme.cardBg} p-8 ${theme.shadow} ${theme.heroBg || theme.cardBg}`}>
-                  <h1 className={`mb-2 text-4xl font-bold ${theme.textPrimary}`}>
-                    {profile.name || "プロフィール"}
-                  </h1>
-                  {profile.tagline && (
-                    <p className={`text-xl ${theme.textSecondary}`}>{profile.tagline}</p>
-                  )}
-                </div>
-
-                {/* Quick Profile */}
-                {generated.sections.quick && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow}`}>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.quick.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Reason */}
-                {generated.sections.reason && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border ${theme.border}`}>
-                    <h2 className={`mb-2 text-2xl font-semibold ${theme.textPrimary}`}>
-                      {generated.sections.reason.heading}
-                    </h2>
-                    <p className={`mb-4 text-sm ${theme.textSecondary}`}>
-                      {generated.sections.reason.summary}
-                    </p>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.reason.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Values */}
-                {generated.sections.values && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border ${theme.border}`}>
-                    <h2 className={`mb-2 text-2xl font-semibold ${theme.textPrimary}`}>
-                      {generated.sections.values.heading}
-                    </h2>
-                    <p className={`mb-4 text-sm ${theme.textSecondary}`}>
-                      {generated.sections.values.summary}
-                    </p>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.values.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Not Fit */}
-                {generated.sections.notFit && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border-2 ${theme.border}`}>
-                    <h2 className={`mb-2 text-2xl font-semibold ${theme.textPrimary}`}>
-                      {generated.sections.notFit.heading}
-                    </h2>
-                    <p className={`mb-4 text-sm ${theme.textSecondary}`}>
-                      {generated.sections.notFit.summary}
-                    </p>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.notFit.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Proof */}
-                {generated.sections.proof && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border ${theme.border}`}>
-                    <h2 className={`mb-4 text-2xl font-semibold ${theme.textPrimary}`}>
-                      {generated.sections.proof.heading}
-                    </h2>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.proof.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Human */}
-                {generated.sections.human && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border ${theme.border}`}>
-                    <h2 className={`mb-2 text-2xl font-semibold ${theme.textPrimary}`}>
-                      {generated.sections.human.heading}
-                    </h2>
-                    <p className={`mb-4 text-sm ${theme.textSecondary}`}>
-                      {generated.sections.human.summary}
-                    </p>
-                    <p className={`${theme.textPrimary} leading-relaxed`}>
-                      {generated.sections.human.body}
-                    </p>
-                  </div>
-                )}
-
-                {/* Links */}
-                {profile.links && profile.links.length > 0 && (
-                  <div className={`rounded-lg ${theme.cardBg} p-6 ${theme.shadow} border ${theme.border}`}>
-                    <h2 className={`mb-4 text-2xl font-semibold ${theme.textPrimary}`}>
-                      リンク
-                    </h2>
-                    <div className="space-y-2">
-                      {profile.links.map((link: any, index: number) => (
-                        <a
-                          key={index}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`block rounded border ${theme.border} p-3 ${theme.textPrimary} transition-colors ${
-                            theme.cardBg === 'bg-white' ? 'hover:bg-gray-50' : 'hover:opacity-80'
-                          }`}
-                        >
-                          {link.label}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })()
+          <LayoutTemplates
+            profile={{
+              name: profile?.name || undefined,
+              photoUrl: profile?.photoUrl || undefined,
+              photoUrls: profile?.photoUrls || undefined,
+              headline: profile?.headline || undefined,
+              tagline: profile?.tagline || undefined,
+              links: profile?.links?.map((link: any) => ({ label: link.label, url: link.url })) || [],
+              layoutTemplateId: profile?.layoutTemplateId || undefined,
+            }}
+            generatedJson={generated}
+            slug={profile?.slug || ""}
+          />
         )}
       </div>
     </div>

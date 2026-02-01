@@ -118,6 +118,14 @@ export async function POST(req: Request) {
   if (eventType === "user.deleted") {
     const { id } = evt.data;
 
+    if (!id) {
+      console.error("User ID is missing in delete event");
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
     try {
       // Userテーブルから削除（CASCADEでProfilePageも削除される）
       await userQueries.delete(id);

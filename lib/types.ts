@@ -20,6 +20,7 @@ export interface ProfilePage {
   impressionTags: string[];
   name: string | null;
   photoUrl: string | null;
+  photoUrls: string[];
   headline: string | null;
   tagline: string | null;
   whoHelp: string | null;
@@ -32,6 +33,7 @@ export interface ProfilePage {
   humanText: string | null;
   tone: string | null;
   themeId: string | null;
+  layoutTemplateId: string | null;
   generatedJson: any | null;
   createdAt: Date;
   updatedAt: Date;

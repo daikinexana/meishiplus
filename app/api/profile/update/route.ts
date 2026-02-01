@@ -31,11 +31,22 @@ export async function PATCH(request: Request) {
         }
       }
 
-      existing = await profileQueries.create({
+      const created = await profileQueries.create({
         userId,
         slug,
         isPublished: false,
       });
+      
+      // ProfilePageWithLinks型に変換（linksを空配列で初期化）
+      existing = { ...created, links: [] };
+    }
+    
+    // existingがnullでないことを確認
+    if (!existing) {
+      return NextResponse.json(
+        { error: "Failed to get or create profile" },
+        { status: 500 }
+      );
     }
 
     // 更新可能なフィールドを定義
@@ -45,6 +56,7 @@ export async function PATCH(request: Request) {
       impressionTags?: string[];
       name?: string;
       photoUrl?: string;
+      photoUrls?: string[];
       headline?: string;
       tagline?: string;
       whoHelp?: string;
@@ -55,6 +67,7 @@ export async function PATCH(request: Request) {
       experienceTags?: string[];
       commonQuestions?: string[];
       humanText?: string;
+      layoutTemplateId?: string;
     } = {};
 
     if (body.role !== undefined) updateData.role = body.role;
@@ -63,6 +76,10 @@ export async function PATCH(request: Request) {
       updateData.impressionTags = body.impressionTags;
     if (body.name !== undefined) updateData.name = body.name;
     if (body.photoUrl !== undefined) updateData.photoUrl = body.photoUrl;
+    if (body.photoUrls !== undefined) {
+      // 最大5枚まで、空文字列を除外
+      updateData.photoUrls = body.photoUrls.filter((url: string) => url.trim() !== "").slice(0, 5);
+    }
     if (body.headline !== undefined) updateData.headline = body.headline;
     if (body.tagline !== undefined) updateData.tagline = body.tagline;
     if (body.whoHelp !== undefined) updateData.whoHelp = body.whoHelp;
@@ -75,6 +92,7 @@ export async function PATCH(request: Request) {
     if (body.commonQuestions !== undefined)
       updateData.commonQuestions = body.commonQuestions;
     if (body.humanText !== undefined) updateData.humanText = body.humanText;
+    if (body.layoutTemplateId !== undefined) updateData.layoutTemplateId = body.layoutTemplateId;
 
     // リンクの更新（links配列が提供された場合）
     if (body.links !== undefined && Array.isArray(body.links)) {
